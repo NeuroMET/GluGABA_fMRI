@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --job-name=s2v
+#SBATCH --output=s2v_%j.log
+#SBATCH --error=s2v_%j.err
+#SBATCH --time=48:00:00
+#SBATCH --ntasks=32
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=64G
+#SBATCH --array=0-2
+
+
+metabs=(glu gaba glu_gaba)
+metab=${metabs[$SLURM_ARRAY_TASK_ID]}
+
+source ~/.bashrc
+conda activate fmri
+
+python ../proc_scripts/s2v.py "$metab" "$SLURM_NTASKS"

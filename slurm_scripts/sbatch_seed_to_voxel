@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --job-name=seed_to_voxel
+#SBATCH --output=logs/seed_to_voxel_%A_%a.out
+#SBATCH --tasks=10
+#SBATCH --mem=64G
+#SBATCH --time=01:00:00
+#SBATCH --array=0-7
+
+source ~/.bashrc
+conda activate fmri
+
+#sids=(sub-NeuroMET07802 sub-NeuroMET12601 sub-NeuroMET04401 sub-NeuroMET05203 sub-NeuroMET09402 sub-NeuroMET04702 sub-NeuroMET00601 sub-NeuroMET10702 sub-NeuroMET00603 sub-NeuroMET07201 sub-NeuroMET07503 sub-NeuroMET10201 sub-NeuroMET08101 sub-NeuroMET09201 sub-NeuroMET07601 sub-NeuroMET12101 sub-NeuroMET11801 sub-NeuroMET06301 sub-NeuroMET08901 sub-NeuroMET08801 sub-NeuroMET11201 sub-NeuroMET08002 sub-NeuroMET09102 sub-NeuroMET01402 sub-NeuroMET06201 sub-NeuroMET09501 sub-NeuroMET09103 sub-NeuroMET05901 sub-NeuroMET10901 sub-NeuroMET04901 sub-NeuroMET06101 sub-NeuroMET01302 sub-NeuroMET06801 sub-NeuroMET11302 sub-NeuroMET07603 sub-NeuroMET11802 sub-NeuroMET03601 sub-NeuroMET03703 sub-NeuroMET05401 sub-NeuroMET07703 sub-NeuroMET02201 sub-NeuroMET00803 sub-NeuroMET04601 sub-NeuroMET11001 sub-NeuroMET04801 sub-NeuroMET07401 sub-NeuroMET02703 sub-NeuroMET06103 sub-NeuroMET07502 sub-NeuroMET07902 sub-NeuroMET06202 sub-NeuroMET03301 sub-NeuroMET12201 sub-NeuroMET12901 sub-NeuroMET01102 sub-NeuroMET04701 sub-NeuroMET02001 sub-NeuroMET03401 sub-NeuroMET02601 sub-NeuroMET12001 sub-NeuroMET03801 sub-NeuroMET09801 sub-NeuroMET01201 sub-NeuroMET08401 sub-NeuroMET11101 sub-NeuroMET00804 sub-NeuroMET09101 sub-NeuroMET01101 sub-NeuroMET03901 sub-NeuroMET01501 sub-NeuroMET08701 sub-NeuroMET09702 sub-NeuroMET10601 sub-NeuroMET02501 sub-NeuroMET10101 sub-NeuroMET02101 sub-NeuroMET09001 sub-NeuroMET07701 sub-NeuroMET02401 sub-NeuroMET09401 sub-NeuroMET08703 sub-NeuroMET09701 sub-NeuroMET07901 sub-NeuroMET12002 sub-NeuroMET00801 sub-NeuroMET02003 sub-NeuroMET01604 sub-NeuroMET02902 sub-NeuroMET06003 sub-NeuroMET11301 sub-NeuroMET05403 sub-NeuroMET12401 sub-NeuroMET10701 sub-NeuroMET11102 sub-NeuroMET10602 sub-NeuroMET05201 sub-NeuroMET06102 sub-NeuroMET01001 sub-NeuroMET10002 sub-NeuroMET12701 sub-NeuroMET06002 sub-NeuroMET08501 sub-NeuroMET06401 sub-NeuroMET00501 sub-NeuroMET00901 sub-NeuroMET09302 sub-NeuroMET10301 sub-NeuroMET02801 sub-NeuroMET10102 sub-NeuroMET01602 sub-NeuroMET05001 sub-NeuroMET03902 sub-NeuroMET06603 sub-NeuroMET02702 sub-NeuroMET03302 sub-NeuroMET01502 sub-NeuroMET06601 sub-NeuroMET02004 sub-NeuroMET07803 sub-NeuroMET10202 sub-NeuroMET01601 sub-NeuroMET07602 sub-NeuroMET05903 sub-NeuroMET05501 sub-NeuroMET07702 sub-NeuroMET00802 sub-NeuroMET09303 sub-NeuroMET03101 sub-NeuroMET00402 sub-NeuroMET05801 sub-NeuroMET05301 sub-NeuroMET12501 sub-NeuroMET07301 sub-NeuroMET01202 sub-NeuroMET02901 sub-NeuroMET00401 sub-NeuroMET07903 sub-NeuroMET04101 sub-NeuroMET01301 sub-NeuroMET04501 sub-NeuroMET04903 sub-NeuroMET05802 sub-NeuroMET05402 sub-NeuroMET00301 sub-NeuroMET01104 sub-NeuroMET06501 sub-NeuroMET06602 sub-NeuroMET00701 sub-NeuroMET07501 sub-NeuroMET10902 sub-NeuroMET07001 sub-NeuroMET11502 sub-NeuroMET10501 sub-NeuroMET01204 sub-NeuroMET03704 sub-NeuroMET01603 sub-NeuroMET09601 sub-NeuroMET09901 sub-NeuroMET07002 sub-NeuroMET08001 sub-NeuroMET03702 sub-NeuroMET01401 sub-NeuroMET09602 sub-NeuroMET10402 sub-NeuroMET01403 sub-NeuroMET10001 sub-NeuroMET01801 sub-NeuroMET00602 sub-NeuroMET01701 sub-NeuroMET10401 sub-NeuroMET07801 sub-NeuroMET09802 sub-NeuroMET08003 sub-NeuroMET05102 sub-NeuroMET03501 sub-NeuroMET08301 sub-NeuroMET01103 sub-NeuroMET02002 sub-NeuroMET07101 sub-NeuroMET03701 sub-NeuroMET03201 sub-NeuroMET12801 sub-NeuroMET11002 sub-NeuroMET07003 sub-NeuroMET10801 sub-NeuroMET02301 sub-NeuroMET12102 sub-NeuroMET08601 sub-NeuroMET07202 sub-NeuroMET00403 sub-NeuroMET04902 sub-NeuroMET04201 sub-NeuroMET03001 sub-NeuroMET05202 sub-NeuroMET04703 sub-NeuroMET10502 sub-NeuroMET08302 sub-NeuroMET05101 sub-NeuroMET05103 sub-NeuroMET09301 sub-NeuroMET06001 sub-NeuroMET04301)
+sids=(
+    sub-NeuroMET00401
+    sub-NeuroMET04501
+    sub-NeuroMET04801
+    sub-NeuroMET04901
+    sub-NeuroMET06101
+    sub-NeuroMET07301
+    sub-NeuroMET08001
+    sub-NeuroMET08701
+)
+sid=${sids[$SLURM_ARRAY_TASK_ID]}
+
+# Run from repository-relative path to avoid personal paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python "${SCRIPT_DIR}/../proc_scripts/seed_to_voxel_sid.py" "$sid"

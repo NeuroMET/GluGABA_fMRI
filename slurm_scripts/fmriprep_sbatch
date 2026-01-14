@@ -1,0 +1,45 @@
+#!/bin/bash
+#SBATCH --job-name=fMRI_NeuroMET
+#SBATCH --ntasks=32
+#SBATCH --nodes=1
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=32G
+#SBATCH --partition=compute
+#SBATCH --array=0-215%10
+
+SRCDIR=${SRCDIR:-/path/to/project}
+export fmriprep_container="${FMRIPREP_CONTAINER:-/path/to/fmriprep.sif}"
+export TMPDIR="${TMPDIR:-$SRCDIR/tmp/fmri}"
+export dsdir="${BIDS_ROOT:-$SRCDIR/data/NeuroMET}"
+export APPTAINER_TMPDIR=$TMPDIR
+export APPTAINER_CACHEDIR=$TMPDIR
+export APPTAINER_LOCALCACHEDIR=$TMPDIR
+export FREESURFER_TMPDIR=$TMPDIR
+
+# Ensure TMPDIR is writable
+mkdir -p $TMPDIR
+chmod -R 775 $TMPDIR
+
+sids=($( ls -1d $dsdir/sub-*))
+
+sid=${sids[$SLURM_ARRAY_TASK_ID]}
+#sid=${sids[0]}
+sid=$(basename $sid)
+echo $sid
+
+/usr/bin/singularity run --cleanenv \
+        --bind ${FS_LICENSE:-$dsdir/code/VBM/license.txt}:/opt/freesurfer/license.txt \
+        --bind $dsdir:/work \
+        --bind ${BIDS_FILTER_FILE:-$dsdir/code/VBM/bids_filter_file.json}:/opt/bids_filter_file.json \
+        --bind $TMPDIR:/tmp \
+        $fmriprep_container \
+        --nthreads 16 --omp-nthreads 16 \
+        --mem-mb 32000 \
+        -v --fs-no-reconall \
+        --level full \
+        --longitudinal \
+        --bids-filter-file /opt/bids_filter_file.json \
+        --participant-label $sid \
+        --resource-monitor --write-graph \
+        -w /tmp \
+        /work /work/derivatives/fmriprep participant

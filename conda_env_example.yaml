@@ -1,0 +1,21 @@
+# Example Conda environment for GluGABA_fMRI
+# Notes:
+# - External neuroimaging tools (FSL, ANTs, FreeSurfer, Apptainer/Singularity) are not installed via Conda here.
+#   Install them separately or use containers as in slurm scripts.
+name: glugaba-fmri
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - nibabel
+  - nilearn
+  - statsmodels
+  - joblib
+  - nipype
+  - jupyterlab
+  - ipykernel
