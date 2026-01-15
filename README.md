@@ -26,4 +26,4 @@ The statistical analysis outputs were converted to NIfTI files for visualization
 
 
 ## Please Cite
-Dell'Orco, A., & Göschel, L. (2026). OrCO - GluGABA_fMRI (1.0). Zenodo.
+Dell'Orco, A., & Göschel, L. (2026). OrCO - GluGABA_fMRI (1.0). Zenodo. https://doi.org/10.5281/zenodo.18254795
